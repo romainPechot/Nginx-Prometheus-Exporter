@@ -1,0 +1,22 @@
+# https://gitlab.com/ccode_0/prometheus-ansibile
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    restart: always
+
+  nginx-prometheus-exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    container_name: nginx-prometheus-exporter
+    environment:
+      - NGINX_SERVER=nginx:80
+      - '--nginx.scrape-uri=http://nginx/stub_status'
+    ports:
+      - "9113:9113"
+    restart: always
